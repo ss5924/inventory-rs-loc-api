@@ -51,4 +51,16 @@ public class BusinessLocation implements Serializable {
                 .updateAt(this.updateAt)
                 .build();
     }
+
+    public void setBusinessLocationName(String businessLocationName) {
+        this.businessLocationName = businessLocationName;
+    }
+
+    public void setBusinessLocationAddress(String businessLocationAddress) {
+        this.businessLocationAddress = businessLocationAddress;
+    }
+
+    public void setBusinessLocationType(String businessLocationType) {
+        this.businessLocationType = businessLocationType;
+    }
 }

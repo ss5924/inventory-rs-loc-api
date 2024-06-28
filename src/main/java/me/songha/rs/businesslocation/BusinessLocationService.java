@@ -25,13 +25,10 @@ public class BusinessLocationService {
 
     @Transactional
     public BusinessLocationDto update(Long id, BusinessLocationDto newBusinessLocationDto) {
-        return businessLocationRepository.findById(id).map(i -> {
-            BusinessLocation businessLocation = BusinessLocation.builder()
-                    .id(id)
-                    .businessLocationAddress(newBusinessLocationDto.getBusinessLocationAddress())
-                    .businessLocationType(newBusinessLocationDto.getBusinessLocationType())
-                    .businessLocationName(newBusinessLocationDto.getBusinessLocationName())
-                    .build();
+        return businessLocationRepository.findById(id).map(businessLocation -> {
+            businessLocation.setBusinessLocationAddress(newBusinessLocationDto.getBusinessLocationAddress());
+            businessLocation.setBusinessLocationType(newBusinessLocationDto.getBusinessLocationType());
+            businessLocation.setBusinessLocationName(newBusinessLocationDto.getBusinessLocationName());
             return businessLocationRepository.save(businessLocation).toBusinessLocationDto();
         }).orElseThrow(() -> new ResourceNotFoundException("Not found id " + id));
     }
