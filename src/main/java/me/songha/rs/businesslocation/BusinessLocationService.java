@@ -2,20 +2,29 @@ package me.songha.rs.businesslocation;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.common.errors.ResourceNotFoundException;
+import org.modelmapper.ModelMapper;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
 public class BusinessLocationService {
     private final BusinessLocationRepository businessLocationRepository;
+    private final ModelMapper modelMapper;
 
-    @Cacheable(value = "BusinessLocation", key = "#id", cacheManager = "cacheManager")
-    public BusinessLocationDto getBusinessLocation(Long id) {
+    public BusinessLocationDto getBusinessLocationById(Long id) {
         return businessLocationRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Not found id " + id))
                 .toBusinessLocationDto();
+    }
+
+//    @Cacheable(value = "getBusinessLocationsByAddress", key = "#addressKeyword", cacheManager = "cacheManager")
+    public List<BusinessLocationDto> getBusinessLocationsByAddress(String addressKeyword) {
+        return businessLocationRepository.findByBusinessLocationAddressContaining(addressKeyword).stream()
+                .map(businessLocation -> modelMapper.map(businessLocation, BusinessLocationDto.class)).toList();
     }
 
     @Transactional

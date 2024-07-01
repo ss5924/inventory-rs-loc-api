@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(value = "/business-location")
@@ -13,13 +15,19 @@ public class BusinessLocationController {
     private final BusinessLocationService businessLocationService;
 
     @GetMapping(value = "/id/{id}")
-    public ResponseEntity<BusinessLocationDto> getBusinessLocation(@PathVariable Long id) {
+    public ResponseEntity<BusinessLocationDto> getBusinessLocationById(@PathVariable Long id) {
         try {
-            BusinessLocationDto businessLocationDto = businessLocationService.getBusinessLocation(id);
+            BusinessLocationDto businessLocationDto = businessLocationService.getBusinessLocationById(id);
             return ResponseEntity.ok(businessLocationDto);
         } catch (ResourceNotFoundException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
+    }
+
+    @GetMapping(value = "/address/{addressKeyword}")
+    public ResponseEntity<List<BusinessLocationDto>> getBusinessLocations(@PathVariable String addressKeyword) {
+        List<BusinessLocationDto> businessLocations = businessLocationService.getBusinessLocationsByAddress(addressKeyword);
+        return ResponseEntity.ok(businessLocations);
     }
 
     @PostMapping
